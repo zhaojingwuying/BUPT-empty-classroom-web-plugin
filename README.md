@@ -77,7 +77,7 @@ BUPT空教室-手机版
 书签网址填写下面这一整行：
 
 ```javascript
-javascript:void((()=>{window.__BUPT_EMPTY_CLASSROOM_LAYOUT='mobile';let s=document.createElement('script');s.src='https://cdn.jsdelivr.net/gh/zhaojingwuying/BUPT-empty-classroom-web-plugin@main/src/emptyclassroom.js?v=20260602-v3-mobile&layout=mobile';s.onerror=()=>alert('插件加载失败，请检查网络或 jsDelivr 是否能访问');document.documentElement.appendChild(s)})())
+javascript:void((()=>{try{document.getElementById('__bupt_empty_classroom_bookmarklet')?.remove();delete window.__BUPT_EMPTY_CLASSROOM_BOOKMARKLET__;window.__BUPT_EMPTY_CLASSROOM_FORCE_RELOAD__=Date.now();window.__BUPT_EMPTY_CLASSROOM_LAYOUT='mobile';let s=document.createElement('script');s.src='https://cdn.jsdelivr.net/gh/zhaojingwuying/BUPT-empty-classroom-web-plugin@main/src/emptyclassroom.js?v=20260602-v4-mobile-force&layout=mobile';s.onerror=()=>alert('插件加载失败，请检查网络或 jsDelivr 是否能访问');document.documentElement.appendChild(s)}catch(e){alert('插件启动失败：'+e.message)}})())
 ```
 
 ## 电脑版书签
@@ -93,7 +93,7 @@ BUPT空教室-电脑版
 书签网址填写下面这一整行：
 
 ```javascript
-javascript:void((()=>{window.__BUPT_EMPTY_CLASSROOM_LAYOUT='desktop';let s=document.createElement('script');s.src='https://cdn.jsdelivr.net/gh/zhaojingwuying/BUPT-empty-classroom-web-plugin@main/src/emptyclassroom.js?v=20260602-v3-desktop&layout=desktop';s.onerror=()=>alert('插件加载失败，请检查网络或 jsDelivr 是否能访问');document.documentElement.appendChild(s)})())
+javascript:void((()=>{try{document.getElementById('__bupt_empty_classroom_bookmarklet')?.remove();delete window.__BUPT_EMPTY_CLASSROOM_BOOKMARKLET__;window.__BUPT_EMPTY_CLASSROOM_FORCE_RELOAD__=Date.now();window.__BUPT_EMPTY_CLASSROOM_LAYOUT='desktop';let s=document.createElement('script');s.src='https://cdn.jsdelivr.net/gh/zhaojingwuying/BUPT-empty-classroom-web-plugin@main/src/emptyclassroom.js?v=20260602-v4-desktop&layout=desktop';s.onerror=()=>alert('插件加载失败，请检查网络或 jsDelivr 是否能访问');document.documentElement.appendChild(s)}catch(e){alert('插件启动失败：'+e.message)}})())
 ```
 
 ## 自动布局书签
@@ -101,7 +101,7 @@ javascript:void((()=>{window.__BUPT_EMPTY_CLASSROOM_LAYOUT='desktop';let s=docum
 如果你希望插件自动判断手机或电脑，可以使用这个版本：
 
 ```javascript
-javascript:void((()=>{window.__BUPT_EMPTY_CLASSROOM_LAYOUT='auto';let s=document.createElement('script');s.src='https://cdn.jsdelivr.net/gh/zhaojingwuying/BUPT-empty-classroom-web-plugin@main/src/emptyclassroom.js?v=20260602-v3-auto&layout=auto';s.onerror=()=>alert('插件加载失败，请检查网络或 jsDelivr 是否能访问');document.documentElement.appendChild(s)})())
+javascript:void((()=>{try{document.getElementById('__bupt_empty_classroom_bookmarklet')?.remove();delete window.__BUPT_EMPTY_CLASSROOM_BOOKMARKLET__;window.__BUPT_EMPTY_CLASSROOM_FORCE_RELOAD__=Date.now();window.__BUPT_EMPTY_CLASSROOM_LAYOUT='auto';let s=document.createElement('script');s.src='https://cdn.jsdelivr.net/gh/zhaojingwuying/BUPT-empty-classroom-web-plugin@main/src/emptyclassroom.js?v=20260602-v4-auto&layout=auto';s.onerror=()=>alert('插件加载失败，请检查网络或 jsDelivr 是否能访问');document.documentElement.appendChild(s)}catch(e){alert('插件启动失败：'+e.message)}})())
 ```
 
 如果自动布局判断不符合预期，可以直接使用“手机版书签”或“电脑版书签”。
@@ -143,6 +143,34 @@ javascript:void((()=>{window.__BUPT_EMPTY_CLASSROOM_LAYOUT='auto';let s=document
 
 ## 常见问题
 
+### 手机页面看起来太小怎么办？
+
+请确认你使用的是“手机版书签”，不是旧版书签或电脑版书签。
+
+手机版书签会做三件事：
+
+1. 强制清除旧版插件界面；
+2. 强制切换到手机布局；
+3. 强制设置页面 viewport。
+
+如果仍然显示很小，通常说明线上代码还没有更新，或者 jsDelivr 还在缓存旧版本。可以访问下面的地址清缓存：
+
+```text
+https://purge.jsdelivr.net/gh/zhaojingwuying/BUPT-empty-classroom-web-plugin@main/src/emptyclassroom.js
+```
+
+清缓存后重新打开官方页面，再点击“手机版书签”。
+
+### 如何判断是不是加载了新版？
+
+运行插件后，界面底部应该能看到类似版本号：
+
+```text
+2026-06-02-public-v4-mobile-force
+```
+
+如果底部还是 `v1`、`v2` 或没有“手机版 / 电脑版”切换按钮，说明你加载的不是新版。
+
 ### 点书签后提示没读到数据怎么办？
 
 请确认：
@@ -163,14 +191,6 @@ javascript:void(function(){alert('当前页面是：'+location.href.split('?')[0
 如果弹出的是 `about:blank`，说明浏览器没有在当前教务页面运行脚本，请换 Via 浏览器。
 
 如果弹出的是官方教务页面地址，但插件仍然异常，可以刷新页面，等官方数据加载完成后再试。
-
-### 手机页面看起来太小怎么办？
-
-优先使用“手机版书签”。
-
-手机版会强制启用移动端布局，并尝试设置页面 viewport，让按钮和列表更适合手机屏幕。
-
-如果仍然显示太小，可以在插件右上角点击“手机版”按钮切换布局，或确认当前书签使用的是“手机版书签”而不是“电脑版书签”。
 
 ### 为什么手机要把 UA 改成 PC？
 

@@ -1,6 +1,6 @@
 {
   "name": "bupt-empty-classroom-web-plugin",
-  "version": "1.1.0",
+  "version": "0.4.0",
   "private": false,
   "type": "module",
   "description": "A responsive bookmarklet that enhances an already opened BUPT empty-classroom query page on mobile and desktop.",

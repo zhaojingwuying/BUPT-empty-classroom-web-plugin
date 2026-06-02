@@ -1,9 +1,17 @@
 (function(){
   'use strict';
   var W=window,D=document;
-  var VERSION='2026-06-02-public-v3-responsive';
+  var VERSION='2026-06-02-public-v4-mobile-force';
   var SCRIPT_LAYOUT=(function(){try{var src=D.currentScript&&D.currentScript.src;var q=src?new URL(src,location.href).searchParams.get('layout'):'';var g=String(W.__BUPT_EMPTY_CLASSROOM_LAYOUT||'');var v=String(g||q||'auto').toLowerCase();return /^(auto|mobile|desktop)$/.test(v)?v:'auto';}catch(e){return 'auto';}})();
-  if(W.__BUPT_EMPTY_CLASSROOM_BOOKMARKLET__&&W.__BUPT_EMPTY_CLASSROOM_BOOKMARKLET__.show){if(W.__BUPT_EMPTY_CLASSROOM_BOOKMARKLET__.setLayout)W.__BUPT_EMPTY_CLASSROOM_BOOKMARKLET__.setLayout(SCRIPT_LAYOUT);W.__BUPT_EMPTY_CLASSROOM_BOOKMARKLET__.show();return;}
+  var EXISTING=W.__BUPT_EMPTY_CLASSROOM_BOOKMARKLET__;
+  if(EXISTING&&EXISTING.show&&!W.__BUPT_EMPTY_CLASSROOM_FORCE_RELOAD__){
+    if(EXISTING.version===VERSION){
+      if(EXISTING.setLayout)EXISTING.setLayout(SCRIPT_LAYOUT);
+      EXISTING.show();return;
+    }
+    try{var oldRoot=D.getElementById('__bupt_empty_classroom_bookmarklet');if(oldRoot)oldRoot.remove();}catch(e){}
+  }
+  if(W.__BUPT_EMPTY_CLASSROOM_FORCE_RELOAD__){try{var oldRoot2=D.getElementById('__bupt_empty_classroom_bookmarklet');if(oldRoot2)oldRoot2.remove();}catch(e){}}
   var TIMES=[
     ['01','08:00','08:45'],['02','08:50','09:35'],['03','09:50','10:35'],['04','10:40','11:25'],['05','11:30','12:15'],
     ['06','13:00','13:45'],['07','13:50','14:35'],['08','14:45','15:30'],['09','15:40','16:25'],['10','16:35','17:20'],
@@ -230,17 +238,17 @@
     '#__bupt_empty_classroom_bookmarklet .ec-empty{padding:26px;color:#888;text-align:center;}#__bupt_empty_classroom_bookmarklet .ec-warn{background:#fff7e6;border:1px solid #ffd591;border-radius:8px;padding:12px;color:#8a5a00;text-align:left;}'+
     '#__bupt_empty_classroom_bookmarklet .ec-modal-mask{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:2147483647;display:flex;align-items:center;justify-content:center;}#__bupt_empty_classroom_bookmarklet .ec-modal{width:min(520px,92vw);background:#fff;border-radius:10px;padding:18px;text-align:left;box-shadow:0 10px 36px rgba(0,0,0,.28);}#__bupt_empty_classroom_bookmarklet .ec-desc{display:grid;grid-template-columns:96px 1fr;border-top:1px solid #f0f0f0;border-left:1px solid #f0f0f0;margin-top:12px;}#__bupt_empty_classroom_bookmarklet .ec-desc div{padding:10px;border-right:1px solid #f0f0f0;border-bottom:1px solid #f0f0f0;}#__bupt_empty_classroom_bookmarklet .ec-desc .k{background:#fafafa;font-weight:600;color:#555;}'+
     '#__bupt_empty_classroom_bookmarklet .ec-footer{text-align:center;color:#999;margin-top:18px;font-size:12px;}'+
-    '#__bupt_empty_classroom_bookmarklet.ec-mobile{font-size:15px;}'+
-    '#__bupt_empty_classroom_bookmarklet.ec-mobile .ec-app{width:100%;max-width:none;margin:0;padding:10px 10px calc(26px + env(safe-area-inset-bottom));text-align:left;}'+
+    '#__bupt_empty_classroom_bookmarklet.ec-mobile{font-size:16px;-webkit-text-size-adjust:100%;text-size-adjust:100%;}'+
+    '#__bupt_empty_classroom_bookmarklet.ec-mobile .ec-app{width:100vw;max-width:none;margin:0;padding:10px 10px calc(26px + env(safe-area-inset-bottom));text-align:left;}'+
     '#__bupt_empty_classroom_bookmarklet.ec-mobile .ec-top{justify-content:flex-start;gap:6px;padding:8px 0;overflow-x:auto;flex-wrap:nowrap;}'+
     '#__bupt_empty_classroom_bookmarklet.ec-mobile .ec-link{min-height:34px;padding:6px 10px;border-radius:8px;white-space:nowrap;}'+
-    '#__bupt_empty_classroom_bookmarklet.ec-mobile .ec-title{text-align:center;padding:2px 2px 6px;}#__bupt_empty_classroom_bookmarklet.ec-mobile .ec-logo{width:52px;height:52px;border-radius:14px;margin:4px auto 6px;font-size:14px;}#__bupt_empty_classroom_bookmarklet.ec-mobile h1{font-size:22px;margin:4px 0 3px;}#__bupt_empty_classroom_bookmarklet.ec-mobile .ec-title p{font-size:12px;line-height:1.45;}'+
+    '#__bupt_empty_classroom_bookmarklet.ec-mobile .ec-title{text-align:center;padding:2px 2px 6px;}#__bupt_empty_classroom_bookmarklet.ec-mobile .ec-logo{width:52px;height:52px;border-radius:14px;margin:4px auto 6px;font-size:14px;}#__bupt_empty_classroom_bookmarklet.ec-mobile h1{font-size:24px;margin:4px 0 3px;}#__bupt_empty_classroom_bookmarklet.ec-mobile .ec-title p{font-size:12px;line-height:1.45;}'+
     '#__bupt_empty_classroom_bookmarklet.ec-mobile .ec-card{margin:10px 0;padding:12px;border-radius:12px;box-shadow:0 2px 10px rgba(0,0,0,.05);}'+
     '#__bupt_empty_classroom_bookmarklet.ec-mobile .ec-row{display:flex;align-items:flex-start;justify-content:flex-start;flex-wrap:wrap;gap:6px;margin:12px 0;text-align:left;}#__bupt_empty_classroom_bookmarklet.ec-mobile .ec-label{display:block;width:100%;margin:0 0 2px;color:#111;font-size:14px;}'+
-    '#__bupt_empty_classroom_bookmarklet.ec-mobile .ec-btn,#__bupt_empty_classroom_bookmarklet.ec-mobile .ec-small{flex:1 1 calc(33.333% - 6px);min-width:0;margin:0;padding:10px 6px;border-radius:9px;min-height:40px;font-size:14px;}'+
-    '#__bupt_empty_classroom_bookmarklet.ec-mobile .ec-time{width:calc((100% - 18px)/4);height:58px;margin:0;border-radius:9px;font-size:11px;line-height:1.15;}#__bupt_empty_classroom_bookmarklet.ec-mobile .ec-time b{font-size:15px;}'+
+    '#__bupt_empty_classroom_bookmarklet.ec-mobile .ec-btn,#__bupt_empty_classroom_bookmarklet.ec-mobile .ec-small{flex:1 1 calc(50% - 6px);min-width:0;margin:0;padding:12px 8px;border-radius:10px;min-height:44px;font-size:15px;}'+
+    '#__bupt_empty_classroom_bookmarklet.ec-mobile .ec-time{width:calc((100% - 12px)/3);height:64px;margin:0;border-radius:10px;font-size:12px;line-height:1.15;}#__bupt_empty_classroom_bookmarklet.ec-mobile .ec-time b{font-size:15px;}'+
     '#__bupt_empty_classroom_bookmarklet.ec-mobile .ec-summary{text-align:left;line-height:1.75;margin:0 0 10px;font-size:13px;}'+
-    '#__bupt_empty_classroom_bookmarklet.ec-mobile .ec-list{display:grid;grid-template-columns:1fr;gap:8px;}#__bupt_empty_classroom_bookmarklet.ec-mobile .ec-room-card{padding:12px 13px;border-radius:12px;min-height:72px;}#__bupt_empty_classroom_bookmarklet.ec-mobile .ec-room-name{font-size:18px;}#__bupt_empty_classroom_bookmarklet.ec-mobile table{font-size:13px;}#__bupt_empty_classroom_bookmarklet.ec-mobile th,#__bupt_empty_classroom_bookmarklet.ec-mobile td{padding:8px 4px;}'+
+    '#__bupt_empty_classroom_bookmarklet.ec-mobile .ec-list{display:grid;grid-template-columns:1fr;gap:8px;}#__bupt_empty_classroom_bookmarklet.ec-mobile .ec-room-card{padding:14px 14px;border-radius:13px;min-height:78px;}#__bupt_empty_classroom_bookmarklet.ec-mobile .ec-room-name{font-size:18px;}#__bupt_empty_classroom_bookmarklet.ec-mobile table{font-size:13px;}#__bupt_empty_classroom_bookmarklet.ec-mobile th,#__bupt_empty_classroom_bookmarklet.ec-mobile td{padding:8px 4px;}'+
     '#__bupt_empty_classroom_bookmarklet.ec-mobile .ec-modal-mask{align-items:flex-end;}#__bupt_empty_classroom_bookmarklet.ec-mobile .ec-modal{width:100%;max-height:82vh;overflow:auto;border-radius:16px 16px 0 0;padding:16px;}#__bupt_empty_classroom_bookmarklet.ec-mobile .ec-desc{grid-template-columns:84px 1fr;}'+
     '@media(max-width:700px){#__bupt_empty_classroom_bookmarklet .ec-app{padding:10px;}#__bupt_empty_classroom_bookmarklet .ec-card{padding:12px;}#__bupt_empty_classroom_bookmarklet th,#__bupt_empty_classroom_bookmarklet td{padding:8px 4px;font-size:12px;}}';}
   function render(){
@@ -306,6 +314,7 @@
   function show(){
     try{
       installHooks();
+      if(detectMobileLayout())ensureViewportForMobile();
       createRoot();
       if(!syncFromVue())state.error='没读到官方页面数据，请先进入官方“空闲教室”页面并确认表格已显示。';
       render();
