@@ -1,0 +1,3 @@
+BUPT空教室查询网页插件 is an independent bookmarklet implementation inspired by Jraaay/EmptyClassroom.
+
+It does not include upstream Go backend code, React components, assets, account-login logic, or configuration files.

@@ -1,0 +1,22 @@
+{
+  "name": "bupt-empty-classroom-web-plugin",
+  "version": "1.0.0",
+  "private": false,
+  "type": "module",
+  "description": "A local bookmarklet that enhances an already opened BUPT empty-classroom query page.",
+  "homepage": "https://github.com/zhaojingwuying/BUPT-empty-classroom-web-plugin#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zhaojingwuying/BUPT-empty-classroom-web-plugin.git"
+  },
+  "scripts": {
+    "build": "node scripts/build-bookmarklet.mjs",
+    "check:secrets": "grep -RInE 'document\\.cookie|localStorage|sessionStorage|Authorization|Bearer|password|passwd|pwd|token|secret|api[_-]?key|access[_-]?key|client[_-]?secret|Set-Cookie|Cookie:|chBKhbg9=' . --exclude-dir=.git --exclude-dir=node_modules --exclude=package.json || true"
+  },
+  "keywords": [
+    "bookmarklet",
+    "empty-classroom",
+    "bupt"
+  ],
+  "license": "MIT"
+}
