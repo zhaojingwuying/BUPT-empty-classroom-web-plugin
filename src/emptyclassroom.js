@@ -1,7 +1,7 @@
 (function(){
   'use strict';
   var W=window,D=document;
-  var VERSION='2026-06-02-public-v1-west-building-fix';
+  var VERSION='2026-06-02-public-v2-quark-safe';
   if(W.__BUPT_EMPTY_CLASSROOM_BOOKMARKLET__&&W.__BUPT_EMPTY_CLASSROOM_BOOKMARKLET__.show){W.__BUPT_EMPTY_CLASSROOM_BOOKMARKLET__.show();return;}
   var TIMES=[
     ['01','08:00','08:45'],['02','08:50','09:35'],['03','09:50','10:35'],['04','10:40','11:25'],['05','11:30','12:15'],
@@ -173,7 +173,7 @@
     return root;
   }
   function cssText(){return ''+
-    '#__bupt_empty_classroom_bookmarklet{position:fixed;inset:0;z-index:2147483647;background:#fff;color:#111;overflow:auto;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei",Arial,sans-serif;font-size:14px;}'+
+    '#__bupt_empty_classroom_bookmarklet{position:fixed;top:0;right:0;bottom:0;left:0;inset:0;z-index:2147483647;background:#fff;color:#111;overflow:auto;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei",Arial,sans-serif;font-size:14px;}'+
     '#__bupt_empty_classroom_bookmarklet .ec-app{max-width:960px;margin:0 auto;padding:18px 14px 36px;text-align:center;}'+
     '#__bupt_empty_classroom_bookmarklet .ec-top{position:sticky;top:0;z-index:5;background:rgba(255,255,255,.92);backdrop-filter:blur(6px);display:flex;justify-content:flex-end;gap:8px;padding:8px 0;}'+
     '#__bupt_empty_classroom_bookmarklet .ec-logo{width:86px;height:86px;border-radius:24px;background:linear-gradient(135deg,#1677ff,#69b1ff);color:#fff;margin:8px auto;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:22px;box-shadow:0 8px 24px rgba(22,119,255,.22)}'+
@@ -243,7 +243,22 @@
     XMLHttpRequest.prototype.send=function(b){this.addEventListener('load',function(){var u=String(this.responseURL||this.__ec_url||''); if(u.indexOf('/todayClassrooms')>=0)ingest(String(this.responseText||''),u);});return xs.apply(this,arguments)};
     if(W.fetch){var of=W.fetch; W.fetch=function(){var args=arguments;return of.apply(this,args).then(function(r){var u=String(r.url||args[0]||''); if(u.indexOf('/todayClassrooms')>=0)r.clone().text().then(function(t){ingest(t,u)}).catch(function(){}); return r;});};}
   }
-  function show(){installHooks();createRoot(); if(!syncFromVue())state.error='没读到官方页面数据，请先进入官方“空闲教室”页面并确认表格已显示。'; render();}
+  function showFatal(e){
+    var msg=(e&&(e.stack||e.message))?String(e.stack||e.message):String(e||'未知错误');
+    var root=$('#__bupt_empty_classroom_bookmarklet');
+    if(!root){root=D.createElement('div');root.id='__bupt_empty_classroom_bookmarklet';D.body.appendChild(root);}
+    root.style.cssText='position:fixed;top:0;right:0;bottom:0;left:0;z-index:2147483647;background:#fff;color:#111;overflow:auto;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei",Arial,sans-serif;padding:16px;box-sizing:border-box;';
+    root.innerHTML='<div style="max-width:760px;margin:0 auto;border:1px solid #ffd591;background:#fff7e6;border-radius:10px;padding:14px;line-height:1.6"><h2 style="margin:0 0 10px;font-size:20px">插件运行出错</h2><p>插件已经加载，但在当前手机浏览器中执行失败。请先点下面按钮返回官方页面，再把这段错误信息反馈给维护者。</p><pre style="white-space:pre-wrap;word-break:break-all;background:#fff;border:1px solid #eee;padding:10px;border-radius:8px;max-height:260px;overflow:auto">'+esc(msg)+'</pre><button data-close style="border:1px solid #d9d9d9;background:#fff;color:#1677ff;border-radius:6px;padding:7px 12px">返回官方页面</button></div>';
+    var btn=$('[data-close]',root); if(btn)btn.onclick=function(){root.remove();};
+  }
+  function show(){
+    try{
+      installHooks();
+      createRoot();
+      if(!syncFromVue())state.error='没读到官方页面数据，请先进入官方“空闲教室”页面并确认表格已显示。';
+      render();
+    }catch(e){showFatal(e);}
+  }
   W.__BUPT_EMPTY_CLASSROOM_BOOKMARKLET__={version:VERSION,show:show,scan:syncFromVue,ingest:ingest};
   show();
 })();

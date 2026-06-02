@@ -9,7 +9,7 @@ const outDir = join(root, 'dist');
 const outPath = join(outDir, 'bookmarklet.txt');
 
 const source = readFileSync(sourcePath, 'utf8').trim();
-const bookmarklet = `javascript:${encodeURIComponent(source)}`;
+const bookmarklet = `javascript:void(${encodeURIComponent(source)})`;
 
 mkdirSync(outDir, { recursive: true });
 writeFileSync(outPath, bookmarklet, 'utf8');
