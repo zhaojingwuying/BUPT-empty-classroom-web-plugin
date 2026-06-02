@@ -6,14 +6,14 @@
 
 ## 功能
 
-- 在当前浏览器页面中增强官方空教室查询结果展示
-- 支持按校区、教学楼、节次筛选空教室
-- 针对西土城校区，将教学楼归类为教一、教二、教三、教四、未来学习大楼
-- 默认使用更清爽的 **经典主题**，兼容电脑和手机
-- 可点击界面右上角 **切换主题**，切换到更适合触屏操作的 **舒适主题**
-- 不需要安装 Tampermonkey / 篡改猴
-- 不接管登录流程，不保存账号密码
-- 不读取 Cookie，不上传用户数据
+* 在当前浏览器页面中增强官方空教室查询结果展示
+* 支持按校区、教学楼、节次筛选空教室
+* 针对西土城校区，将教学楼归类为教一、教二、教三、教四、未来学习大楼
+* 默认使用更清爽的 **经典主题**，兼容电脑和手机
+* 可点击界面右上角 **切换主题**，切换到更适合触屏操作的 **舒适主题**
+* 不需要安装 Tampermonkey / 篡改猴
+* 不接管登录流程，不保存账号密码
+* 不读取 Cookie，不上传用户数据
 
 ## 使用前提
 
@@ -43,12 +43,12 @@ http://jwglweixin.bupt.edu.cn/sjd/#
 
 已知情况：
 
-| 浏览器 | 情况 |
-|---|---|
-| Via 浏览器 | 推荐使用。UA 改成 PC 后可用 |
-| 夸克浏览器 | 可能会把 `javascript:` 书签运行到 `about:blank`，导致白屏 |
-| 小米浏览器 | 可能无法保存 `javascript:` 书签，或无法正常打开官方页面 |
-| Edge / Chrome 手机端 | 可能无法正常打开官方教务页面，取决于 UA 和网络环境 |
+| 浏览器               | 情况                                          |
+| ----------------- | ------------------------------------------- |
+| Via 浏览器           | 推荐使用。UA 改成 PC 后可用                           |
+| 夸克浏览器             | 可能会把 `javascript:` 书签运行到 `about:blank`，导致白屏 |
+| 小米浏览器             | 可能无法保存 `javascript:` 书签，或无法正常打开官方页面         |
+| Edge / Chrome 手机端 | 可能无法正常打开官方教务页面，取决于 UA 和网络环境                 |
 
 如果点击书签后白屏，可以先用下面这个测试书签检查浏览器是否把脚本运行在当前页面：
 
@@ -66,16 +66,16 @@ javascript:void(function(){alert('当前页面是：'+location.href.split('?')[0
 
 ## 主题说明
 
-本插件现在有两个显示主题：
+本插件有两个显示主题：
 
-| 主题 | 说明 |
-|---|---|
-| 经典主题 | 默认主题。保留原先类似电脑端的表格布局，实测在电脑和手机 Via 中都比较清爽 |
-| 舒适主题 | 触屏优化主题。按钮和结果项更适合手指点击，但相比上一版已经压缩了高度和间距 |
+| 主题   | 说明                                     |
+| ---- | -------------------------------------- |
+| 经典主题 | 默认主题。保留类似电脑端的表格布局，实测在电脑和手机 Via 中都比较清爽  |
+| 舒适主题 | 触屏优化主题。按钮和结果项更适合手指点击，但页面会比经典主题占用更多垂直空间 |
 
 默认打开时使用 **经典主题**。
 
-运行插件后，右上角会显示当前主题，并提供 **切换主题** 按钮。点击后会在经典主题和舒适主题之间切换。
+运行插件后，右上角会提供 **切换主题** 按钮。点击后会在经典主题和舒适主题之间切换。
 
 ## 推荐书签
 
@@ -88,14 +88,16 @@ BUPT空教室查询
 书签网址填写下面这一整行：
 
 ```javascript
-javascript:void((()=>{try{document.getElementById('__bupt_empty_classroom_bookmarklet')?.remove();delete window.__BUPT_EMPTY_CLASSROOM_BOOKMARKLET__;window.__BUPT_EMPTY_CLASSROOM_FORCE_RELOAD__=Date.now();window.__BUPT_EMPTY_CLASSROOM_THEME='classic';let s=document.createElement('script');s.src='https://cdn.jsdelivr.net/gh/zhaojingwuying/BUPT-empty-classroom-web-plugin@main/src/emptyclassroom.js?v=20260602-v5-theme-switch&theme=classic';s.onerror=()=>alert('插件加载失败，请检查网络或 jsDelivr 是否能访问');document.documentElement.appendChild(s)}catch(e){alert('插件启动失败：'+e.message)}})())
+javascript:void((()=>{try{document.getElementById('__bupt_empty_classroom_bookmarklet')?.remove();delete window.__BUPT_EMPTY_CLASSROOM_BOOKMARKLET__;window.__BUPT_EMPTY_CLASSROOM_FORCE_RELOAD__=Date.now();window.__BUPT_EMPTY_CLASSROOM_THEME='classic';let s=document.createElement('script');s.src='https://cdn.jsdelivr.net/gh/zhaojingwuying/BUPT-empty-classroom-web-plugin@04b2381/src/emptyclassroom.js?v=v5-04b2381&theme=classic';s.onerror=()=>alert('插件加载失败，请检查网络或 jsDelivr 是否能访问');document.documentElement.appendChild(s)}catch(e){alert('插件启动失败：'+e.message)}})())
 ```
 
-这个书签默认打开 **经典主题**。如果想尝试舒适主题，可以打开插件后点击右上角 **切换主题**。
+这个书签默认打开 **经典主题**。运行后可以点击右上角 **切换主题**，切换到舒适主题。
+
+本项目推荐使用固定 commit 版本的书签地址，例如 `@04b2381`，避免 jsDelivr 对 `@main` 分支缓存导致加载旧代码。
 
 ## 舒适主题直达书签
 
-如果你更喜欢触屏优化的舒适主题，也可以另外建一个书签：
+也可以另外建一个直接打开舒适主题的书签，名称可以写：
 
 ```text
 BUPT空教室查询-舒适主题
@@ -104,7 +106,7 @@ BUPT空教室查询-舒适主题
 书签网址填写下面这一整行：
 
 ```javascript
-javascript:void((()=>{try{document.getElementById('__bupt_empty_classroom_bookmarklet')?.remove();delete window.__BUPT_EMPTY_CLASSROOM_BOOKMARKLET__;window.__BUPT_EMPTY_CLASSROOM_FORCE_RELOAD__=Date.now();window.__BUPT_EMPTY_CLASSROOM_THEME='comfortable';let s=document.createElement('script');s.src='https://cdn.jsdelivr.net/gh/zhaojingwuying/BUPT-empty-classroom-web-plugin@main/src/emptyclassroom.js?v=20260602-v5-theme-switch&theme=comfortable';s.onerror=()=>alert('插件加载失败，请检查网络或 jsDelivr 是否能访问');document.documentElement.appendChild(s)}catch(e){alert('插件启动失败：'+e.message)}})())
+javascript:void((()=>{try{document.getElementById('__bupt_empty_classroom_bookmarklet')?.remove();delete window.__BUPT_EMPTY_CLASSROOM_BOOKMARKLET__;window.__BUPT_EMPTY_CLASSROOM_FORCE_RELOAD__=Date.now();window.__BUPT_EMPTY_CLASSROOM_THEME='comfortable';let s=document.createElement('script');s.src='https://cdn.jsdelivr.net/gh/zhaojingwuying/BUPT-empty-classroom-web-plugin@04b2381/src/emptyclassroom.js?v=v5-04b2381-comfortable&theme=comfortable';s.onerror=()=>alert('插件加载失败，请检查网络或 jsDelivr 是否能访问');document.documentElement.appendChild(s)}catch(e){alert('插件启动失败：'+e.message)}})())
 ```
 
 ## 如何在手机 Via 浏览器中添加书签
@@ -130,7 +132,7 @@ javascript:void((()=>{try{document.getElementById('__bupt_empty_classroom_bookma
 5. 等待官方页面中的空教室数据加载完成。
 6. 点击 `BUPT空教室查询` 书签。
 7. 默认会进入经典主题。
-8. 如果想使用更适合触屏点击的布局，点击右上角 **切换主题**。
+8. 需要更适合触屏点击的布局时，点击右上角 **切换主题**。
 
 ### 电脑端
 
@@ -147,7 +149,7 @@ javascript:void((()=>{try{document.getElementById('__bupt_empty_classroom_bookma
 
 请确认：
 
-1. 你已经进入官方“空教室查询”页面；
+1. 已经进入官方“空教室查询”页面；
 2. 官方页面中的空教室列表已经加载完成；
 3. 不是在登录页、首页或空白页运行插件；
 4. 可以先切换一次校区，让官方页面重新加载数据，然后再点插件书签。
@@ -164,15 +166,50 @@ javascript:void(function(){alert('当前页面是：'+location.href.split('?')[0
 
 如果弹出的是官方教务页面地址，但插件仍然异常，可以刷新页面，等官方数据加载完成后再试。
 
-### 手机页面看起来太小怎么办？
-
-默认的经典主题会保留表格布局，在手机 Via 中通常比较清爽。如果觉得按钮不够好点，可以点击右上角 **切换主题** 切到舒适主题。
-
-舒适主题会让按钮和结果卡片更适合触屏，但页面会比经典主题占用更多垂直空间。
-
 ### 为什么手机要把 UA 改成 PC？
 
 官方页面在部分手机浏览器中可能直接报服务器错误。实测将 UA / 浏览器标识改成 PC 后，Via 浏览器可以正常打开并登录官方页面。
+
+### 页面太小或按钮不好点怎么办？
+
+默认的经典主题保留表格布局，在电脑和手机 Via 中都比较清爽。
+
+如果觉得按钮不够好点，可以点击右上角 **切换主题**，切到舒适主题。舒适主题会让按钮和结果项更适合触屏操作，但页面会比经典主题更占垂直空间。
+
+### 为什么推荐固定 commit 地址，而不是 `@main`？
+
+jsDelivr 对分支地址存在缓存。使用 `@main` 时，即使 GitHub 仓库已经更新，jsDelivr 仍可能短时间返回旧代码。
+
+所以本项目推荐使用固定 commit 地址，例如：
+
+```text
+https://cdn.jsdelivr.net/gh/zhaojingwuying/BUPT-empty-classroom-web-plugin@04b2381/src/emptyclassroom.js
+```
+
+这样加载的代码版本是确定的，也更方便审计。
+
+### 更新插件版本时怎么办？
+
+发布新版本后，可以这样更新 README 里的书签：
+
+1. 在 GitHub 提交新代码；
+2. 打开最新 commit 页面；
+3. 复制新的 commit hash；
+4. 把书签地址里的 `@04b2381` 改成新的 commit hash；
+5. 同步修改 `v=` 后面的版本标记；
+6. 更新 README。
+
+例如：
+
+```text
+@04b2381
+```
+
+替换成：
+
+```text
+@新的commit哈希
+```
 
 ### 为什么不是直接安装 App？
 
@@ -188,35 +225,37 @@ javascript:void(function(){alert('当前页面是：'+location.href.split('?')[0
 
 本脚本不会：
 
-- 读取 `document.cookie`
-- 读取 `localStorage` / `sessionStorage`
-- 保存账号、密码、Cookie、Token
-- 主动向第三方服务器上传数据
-- 在页面中展示完整接口 URL 或 query 参数
+* 读取 `document.cookie`
+* 读取 `localStorage` / `sessionStorage`
+* 保存账号、密码、Cookie、Token
+* 主动向第三方服务器上传数据
+* 在页面中展示完整接口 URL 或 query 参数
 
 请不要在 Issue、截图、日志或 README 中公开任何包含 Cookie、Token、完整接口 URL、`chBKhbg9` 或其他 query 参数的内容。
 
 ## 关于 CDN 加载
 
-上面的书签脚本会从 jsDelivr 加载本仓库中的源码文件：
+本项目推荐使用固定 commit 版本的 jsDelivr 地址，例如：
+
+```text
+https://cdn.jsdelivr.net/gh/zhaojingwuying/BUPT-empty-classroom-web-plugin@04b2381/src/emptyclassroom.js
+```
+
+不推荐直接使用：
 
 ```text
 https://cdn.jsdelivr.net/gh/zhaojingwuying/BUPT-empty-classroom-web-plugin@main/src/emptyclassroom.js
 ```
 
-这里的 `@main` 表示加载 main 分支的最新代码。自己使用时这样比较方便。
+原因是 `@main` 可能被 jsDelivr 缓存，导致仓库已经更新但实际加载的仍然是旧代码。
 
-如果你希望固定到某个已审计版本，可以把 `@main` 改成具体 commit 哈希，例如：
-
-```text
-https://cdn.jsdelivr.net/gh/zhaojingwuying/BUPT-empty-classroom-web-plugin@某个commit哈希/src/emptyclassroom.js
-```
-
-更新代码后，如果 jsDelivr 缓存没有立即刷新，可以访问下面的地址清理缓存：
+如果需要清理 jsDelivr 缓存，可以访问：
 
 ```text
 https://purge.jsdelivr.net/gh/zhaojingwuying/BUPT-empty-classroom-web-plugin@main/src/emptyclassroom.js
 ```
+
+不过清缓存不一定能立刻解决所有地区的缓存问题。固定 commit 地址更稳定。
 
 ## 开发与审计
 
