@@ -1,8 +1,8 @@
 (function(){
   'use strict';
   var W=window,D=document;
-  var VERSION='2026-06-02-public-v4-mobile-force';
-  var SCRIPT_LAYOUT=(function(){try{var src=D.currentScript&&D.currentScript.src;var q=src?new URL(src,location.href).searchParams.get('layout'):'';var g=String(W.__BUPT_EMPTY_CLASSROOM_LAYOUT||'');var v=String(g||q||'auto').toLowerCase();return /^(auto|mobile|desktop)$/.test(v)?v:'auto';}catch(e){return 'auto';}})();
+  var VERSION='2026-06-02-public-v5-theme-switch';
+  var SCRIPT_LAYOUT=(function(){try{var src=D.currentScript&&D.currentScript.src;var sp=src?new URL(src,location.href).searchParams:null;var q=sp?(sp.get('theme')||sp.get('layout')):'';var g=String(W.__BUPT_EMPTY_CLASSROOM_THEME||W.__BUPT_EMPTY_CLASSROOM_LAYOUT||'');var v=String(g||q||'classic').toLowerCase();if(v==='desktop'||v==='pc'||v==='auto')v='classic';if(v==='mobile'||v==='phone'||v==='compact')v='comfortable';return /^(classic|comfortable)$/.test(v)?v:'classic';}catch(e){return 'classic';}})();
   var EXISTING=W.__BUPT_EMPTY_CLASSROOM_BOOKMARKLET__;
   if(EXISTING&&EXISTING.show&&!W.__BUPT_EMPTY_CLASSROOM_FORCE_RELOAD__){
     if(EXISTING.version===VERSION){
@@ -42,17 +42,11 @@
   function norm(s){return String(s||'').replace(/\s+/g,'').toLowerCase()}
   function roomSort(a,b){return sortKey(a.name).localeCompare(sortKey(b.name),'zh-CN',{numeric:true})}
   function sortKey(s){return String(s||'').replace(/(\d+)/g,function(_,n){return String(parseInt(n,10)).padStart(6,'0')})}
-  function detectMobileLayout(){
-    try{
-      if(state.layout==='mobile')return true;
-      if(state.layout==='desktop')return false;
-      var sw=Math.min(W.screen&&W.screen.width||9999,W.screen&&W.screen.height||9999);
-      var vv=(W.visualViewport&&W.visualViewport.width)||W.innerWidth||D.documentElement.clientWidth||9999;
-      return sw<=760||vv<=760;
-    }catch(e){return false;}
+  function detectComfortableTheme(){
+    return state.layout==='comfortable';
   }
-  function ensureViewportForMobile(){
-    if(!detectMobileLayout())return;
+  function ensureViewportForComfortable(){
+    if(!detectComfortableTheme())return;
     try{
       var m=$('meta[name=\"viewport\"]',D);
       if(!m){m=D.createElement('meta');m.name='viewport';(D.head||D.documentElement).appendChild(m);}
@@ -62,14 +56,17 @@
   }
   function updateLayoutClass(root){
     if(!root)return;
-    root.className=detectMobileLayout()?'ec-mobile':'ec-desktop';
-    var b=$('#ec-layout',root); if(b)b.textContent=detectMobileLayout()?'电脑版':'手机版';
+    root.className=detectComfortableTheme()?'ec-comfort':'ec-classic';
+    var b=$('#ec-theme',root); if(b)b.textContent='切换主题';
+    var t=$('#ec-theme-name',root); if(t)t.textContent=detectComfortableTheme()?'舒适主题':'经典主题';
   }
   function setLayout(layout){
-    layout=String(layout||'auto').toLowerCase();
-    if(!/^(auto|mobile|desktop)$/.test(layout))layout='auto';
+    layout=String(layout||'classic').toLowerCase();
+    if(layout==='desktop'||layout==='pc'||layout==='auto')layout='classic';
+    if(layout==='mobile'||layout==='phone'||layout==='compact')layout='comfortable';
+    if(!/^(classic|comfortable)$/.test(layout))layout='classic';
     state.layout=layout;
-    if(layout==='mobile')ensureViewportForMobile();
+    if(layout==='comfortable')ensureViewportForComfortable();
     render();
   }
   var WEST_BUILDINGS=['1','2','3','4','未来学习大楼'];
@@ -203,15 +200,15 @@
     push(start,prev); return parts.join(', ');
   }
   function createRoot(){
-    ensureViewportForMobile();
+    ensureViewportForComfortable();
     var old=$('#__bupt_empty_classroom_bookmarklet'); if(old){updateLayoutClass(old);return old;}
     var root=D.createElement('div'); root.id='__bupt_empty_classroom_bookmarklet'; updateLayoutClass(root);
-    root.innerHTML='<style>'+cssText()+'</style><div class="ec-app"><div class="ec-top"><button class="ec-link" id="ec-back">返回官方页面</button><button class="ec-link" id="ec-refresh">重读数据</button><button class="ec-link" id="ec-layout">手机版</button><button class="ec-link" id="ec-close">关闭</button></div><div class="ec-title"><div class="ec-logo">BUPT</div><h1>BUPT 空教室查询</h1><p>数据来自你已打开的官方空闲教室页面；本脚本不读取 Cookie，不保存账号密码，不上传数据。西土城仅教一/教二/教三/教四/未来学习大楼。</p></div><div id="ec-main"></div><div class="ec-footer">官方页面增强显示 · '+esc(VERSION)+'</div></div>';
+    root.innerHTML='<style>'+cssText()+'</style><div class="ec-app"><div class="ec-top"><span class="ec-theme-badge" id="ec-theme-name">经典主题</span><button class="ec-link" id="ec-back">返回官方页面</button><button class="ec-link" id="ec-refresh">重读数据</button><button class="ec-link" id="ec-theme">切换主题</button><button class="ec-link" id="ec-close">关闭</button></div><div class="ec-title"><div class="ec-logo">BUPT</div><h1>BUPT 空教室查询</h1><p>数据来自你已打开的官方空闲教室页面；本脚本不读取 Cookie，不保存账号密码，不上传数据。西土城仅教一/教二/教三/教四/未来学习大楼。</p></div><div id="ec-main"></div><div class="ec-footer">官方页面增强显示 · '+esc(VERSION)+'</div></div>';
     D.body.appendChild(root);
     $('#ec-back',root).onclick=function(){root.style.display='none'};
     $('#ec-close',root).onclick=function(){root.remove()};
     $('#ec-refresh',root).onclick=function(){state.error=''; if(!syncFromVue())state.error='还是没有读到官方数据。请确认官方空闲教室页面已经加载完成。'; render();};
-    $('#ec-layout',root).onclick=function(){setLayout(detectMobileLayout()?'desktop':'mobile')};
+    $('#ec-theme',root).onclick=function(){setLayout(detectComfortableTheme()?'classic':'comfortable')};
     updateLayoutClass(root);
     return root;
   }
@@ -226,6 +223,7 @@
     '#__bupt_empty_classroom_bookmarklet .ec-row{margin:10px 0;text-align:center;}#__bupt_empty_classroom_bookmarklet .ec-label{font-weight:600;margin-right:8px;color:#374151;}'+
     '#__bupt_empty_classroom_bookmarklet button{font-family:inherit;cursor:pointer;transition:.15s;}'+
     '#__bupt_empty_classroom_bookmarklet .ec-link{border:1px solid #d9d9d9;background:#fff;color:#1677ff;border-radius:6px;padding:5px 10px;}'+
+    '#__bupt_empty_classroom_bookmarklet .ec-theme-badge{align-self:center;color:#6b7280;background:#f5f5f5;border:1px solid #e5e7eb;border-radius:999px;padding:4px 10px;font-size:12px;white-space:nowrap;}'+
     '#__bupt_empty_classroom_bookmarklet .ec-btn{border:1px solid #d9d9d9;background:#fff;color:#111;border-radius:6px;min-width:6em;margin:3px;padding:6px 10px;}'+
     '#__bupt_empty_classroom_bookmarklet .ec-btn.active{background:#1677ff;color:#fff;border-color:#1677ff;}'+
     '#__bupt_empty_classroom_bookmarklet .ec-time{width:45px;height:45px;border:1px solid #d9d9d9;background:#fff;border-radius:6px;margin:2px;padding:0;line-height:1.05;vertical-align:top;font-size:12px;}'+
@@ -238,18 +236,18 @@
     '#__bupt_empty_classroom_bookmarklet .ec-empty{padding:26px;color:#888;text-align:center;}#__bupt_empty_classroom_bookmarklet .ec-warn{background:#fff7e6;border:1px solid #ffd591;border-radius:8px;padding:12px;color:#8a5a00;text-align:left;}'+
     '#__bupt_empty_classroom_bookmarklet .ec-modal-mask{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:2147483647;display:flex;align-items:center;justify-content:center;}#__bupt_empty_classroom_bookmarklet .ec-modal{width:min(520px,92vw);background:#fff;border-radius:10px;padding:18px;text-align:left;box-shadow:0 10px 36px rgba(0,0,0,.28);}#__bupt_empty_classroom_bookmarklet .ec-desc{display:grid;grid-template-columns:96px 1fr;border-top:1px solid #f0f0f0;border-left:1px solid #f0f0f0;margin-top:12px;}#__bupt_empty_classroom_bookmarklet .ec-desc div{padding:10px;border-right:1px solid #f0f0f0;border-bottom:1px solid #f0f0f0;}#__bupt_empty_classroom_bookmarklet .ec-desc .k{background:#fafafa;font-weight:600;color:#555;}'+
     '#__bupt_empty_classroom_bookmarklet .ec-footer{text-align:center;color:#999;margin-top:18px;font-size:12px;}'+
-    '#__bupt_empty_classroom_bookmarklet.ec-mobile{font-size:16px;-webkit-text-size-adjust:100%;text-size-adjust:100%;}'+
-    '#__bupt_empty_classroom_bookmarklet.ec-mobile .ec-app{width:100vw;max-width:none;margin:0;padding:10px 10px calc(26px + env(safe-area-inset-bottom));text-align:left;}'+
-    '#__bupt_empty_classroom_bookmarklet.ec-mobile .ec-top{justify-content:flex-start;gap:6px;padding:8px 0;overflow-x:auto;flex-wrap:nowrap;}'+
-    '#__bupt_empty_classroom_bookmarklet.ec-mobile .ec-link{min-height:34px;padding:6px 10px;border-radius:8px;white-space:nowrap;}'+
-    '#__bupt_empty_classroom_bookmarklet.ec-mobile .ec-title{text-align:center;padding:2px 2px 6px;}#__bupt_empty_classroom_bookmarklet.ec-mobile .ec-logo{width:52px;height:52px;border-radius:14px;margin:4px auto 6px;font-size:14px;}#__bupt_empty_classroom_bookmarklet.ec-mobile h1{font-size:24px;margin:4px 0 3px;}#__bupt_empty_classroom_bookmarklet.ec-mobile .ec-title p{font-size:12px;line-height:1.45;}'+
-    '#__bupt_empty_classroom_bookmarklet.ec-mobile .ec-card{margin:10px 0;padding:12px;border-radius:12px;box-shadow:0 2px 10px rgba(0,0,0,.05);}'+
-    '#__bupt_empty_classroom_bookmarklet.ec-mobile .ec-row{display:flex;align-items:flex-start;justify-content:flex-start;flex-wrap:wrap;gap:6px;margin:12px 0;text-align:left;}#__bupt_empty_classroom_bookmarklet.ec-mobile .ec-label{display:block;width:100%;margin:0 0 2px;color:#111;font-size:14px;}'+
-    '#__bupt_empty_classroom_bookmarklet.ec-mobile .ec-btn,#__bupt_empty_classroom_bookmarklet.ec-mobile .ec-small{flex:1 1 calc(50% - 6px);min-width:0;margin:0;padding:12px 8px;border-radius:10px;min-height:44px;font-size:15px;}'+
-    '#__bupt_empty_classroom_bookmarklet.ec-mobile .ec-time{width:calc((100% - 12px)/3);height:64px;margin:0;border-radius:10px;font-size:12px;line-height:1.15;}#__bupt_empty_classroom_bookmarklet.ec-mobile .ec-time b{font-size:15px;}'+
-    '#__bupt_empty_classroom_bookmarklet.ec-mobile .ec-summary{text-align:left;line-height:1.75;margin:0 0 10px;font-size:13px;}'+
-    '#__bupt_empty_classroom_bookmarklet.ec-mobile .ec-list{display:grid;grid-template-columns:1fr;gap:8px;}#__bupt_empty_classroom_bookmarklet.ec-mobile .ec-room-card{padding:14px 14px;border-radius:13px;min-height:78px;}#__bupt_empty_classroom_bookmarklet.ec-mobile .ec-room-name{font-size:18px;}#__bupt_empty_classroom_bookmarklet.ec-mobile table{font-size:13px;}#__bupt_empty_classroom_bookmarklet.ec-mobile th,#__bupt_empty_classroom_bookmarklet.ec-mobile td{padding:8px 4px;}'+
-    '#__bupt_empty_classroom_bookmarklet.ec-mobile .ec-modal-mask{align-items:flex-end;}#__bupt_empty_classroom_bookmarklet.ec-mobile .ec-modal{width:100%;max-height:82vh;overflow:auto;border-radius:16px 16px 0 0;padding:16px;}#__bupt_empty_classroom_bookmarklet.ec-mobile .ec-desc{grid-template-columns:84px 1fr;}'+
+    '#__bupt_empty_classroom_bookmarklet.ec-comfort{font-size:14px;-webkit-text-size-adjust:100%;text-size-adjust:100%;}'+
+    '#__bupt_empty_classroom_bookmarklet.ec-comfort .ec-app{width:100vw;max-width:none;margin:0;padding:8px 8px calc(18px + env(safe-area-inset-bottom));text-align:left;}'+
+    '#__bupt_empty_classroom_bookmarklet.ec-comfort .ec-top{justify-content:flex-start;gap:5px;padding:6px 0;overflow-x:auto;flex-wrap:nowrap;}'+
+    '#__bupt_empty_classroom_bookmarklet.ec-comfort .ec-link{min-height:30px;padding:4px 8px;border-radius:7px;white-space:nowrap;font-size:13px;}#__bupt_empty_classroom_bookmarklet.ec-comfort .ec-theme-badge{padding:3px 8px;font-size:12px;}'+
+    '#__bupt_empty_classroom_bookmarklet.ec-comfort .ec-title{text-align:center;padding:0 2px 4px;}#__bupt_empty_classroom_bookmarklet.ec-comfort .ec-logo{width:38px;height:38px;border-radius:11px;margin:2px auto 4px;font-size:12px;}#__bupt_empty_classroom_bookmarklet.ec-comfort h1{font-size:20px;margin:2px 0;}#__bupt_empty_classroom_bookmarklet.ec-comfort .ec-title p{font-size:11px;line-height:1.35;}'+
+    '#__bupt_empty_classroom_bookmarklet.ec-comfort .ec-card{margin:8px 0;padding:8px;border-radius:10px;box-shadow:0 1px 6px rgba(0,0,0,.04);}'+
+    '#__bupt_empty_classroom_bookmarklet.ec-comfort .ec-row{display:flex;align-items:center;justify-content:flex-start;flex-wrap:wrap;gap:4px;margin:8px 0;text-align:left;}#__bupt_empty_classroom_bookmarklet.ec-comfort .ec-label{display:block;width:100%;margin:0;color:#111;font-size:13px;}'+
+    '#__bupt_empty_classroom_bookmarklet.ec-comfort .ec-btn,#__bupt_empty_classroom_bookmarklet.ec-comfort .ec-small{flex:0 1 auto;min-width:auto;margin:0;padding:7px 9px;border-radius:8px;min-height:34px;font-size:13px;}'+
+    '#__bupt_empty_classroom_bookmarklet.ec-comfort .ec-time{width:calc((100% - 16px)/4);height:48px;margin:0;border-radius:8px;font-size:10px;line-height:1.1;}#__bupt_empty_classroom_bookmarklet.ec-comfort .ec-time b{font-size:13px;}'+
+    '#__bupt_empty_classroom_bookmarklet.ec-comfort .ec-summary{text-align:left;line-height:1.55;margin:0 0 8px;font-size:12px;}'+
+    '#__bupt_empty_classroom_bookmarklet.ec-comfort .ec-list{display:grid;grid-template-columns:1fr;gap:6px;}#__bupt_empty_classroom_bookmarklet.ec-comfort .ec-room-card{padding:9px 10px;border-radius:10px;min-height:56px;}#__bupt_empty_classroom_bookmarklet.ec-comfort .ec-room-name{font-size:16px;}#__bupt_empty_classroom_bookmarklet.ec-comfort .ec-room-meta,#__bupt_empty_classroom_bookmarklet.ec-comfort .ec-room-time{font-size:11px;margin-top:2px;}#__bupt_empty_classroom_bookmarklet.ec-comfort table{font-size:13px;}#__bupt_empty_classroom_bookmarklet.ec-comfort th,#__bupt_empty_classroom_bookmarklet.ec-comfort td{padding:8px 4px;}'+
+    '#__bupt_empty_classroom_bookmarklet.ec-comfort .ec-modal-mask{align-items:flex-end;}#__bupt_empty_classroom_bookmarklet.ec-comfort .ec-modal{width:100%;max-height:80vh;overflow:auto;border-radius:14px 14px 0 0;padding:12px;}#__bupt_empty_classroom_bookmarklet.ec-comfort .ec-desc{grid-template-columns:76px 1fr;}'+
     '@media(max-width:700px){#__bupt_empty_classroom_bookmarklet .ec-app{padding:10px;}#__bupt_empty_classroom_bookmarklet .ec-card{padding:12px;}#__bupt_empty_classroom_bookmarklet th,#__bupt_empty_classroom_bookmarklet td{padding:8px 4px;font-size:12px;}}';}
   function render(){
     var root=createRoot(); updateLayoutClass(root); root.style.display='block'; var main=$('#ec-main',root);
@@ -276,7 +274,7 @@
   function buildingButtons(data){return data.buildings.map(function(b){return '<button class="ec-btn '+(state.selectedBuildings.indexOf(b)>=0?'active':'')+'" data-building="'+esc(b)+'">'+esc(buildingLabel(b))+'</button>'}).join('')||'<span style="color:#999">未解析到教学楼</span>';}
   function timeButtons(){return TIMES.map(function(t,i){var dis=disabledTime(i),act=state.selectedTimes.indexOf(i)>=0;return '<button class="ec-time '+(act?'active':'')+'" data-time="'+i+'" '+(dis?'disabled':'')+'>'+(state.showClassTime?'<span>'+esc(t[1])+'</span><br>':'')+'<b>'+esc(t[0])+'</b>'+(state.showClassTime?'<br><span>'+esc(t[2])+'</span>':'')+'</button>'}).join('');}
   function tableHtml(rows){
-    if(detectMobileLayout())return '<div class="ec-list">'+rows.map(function(r,i){return '<button class="ec-room-card" data-row="'+i+'"><span class="ec-room-name">'+esc(r.name)+'</span><span class="ec-room-meta">座位数：'+esc(r.size)+' · 类型：'+esc(r.type)+' · 来源：教务</span><span class="ec-room-time">空闲：'+esc(timeRangeStr(r.empty_class_time))+'</span></button>';}).join('')+'</div>';
+    if(detectComfortableTheme())return '<div class="ec-list">'+rows.map(function(r,i){return '<button class="ec-room-card" data-row="'+i+'"><span class="ec-room-name">'+esc(r.name)+'</span><span class="ec-room-meta">座位数：'+esc(r.size)+' · 类型：'+esc(r.type)+' · 来源：教务</span><span class="ec-room-time">空闲：'+esc(timeRangeStr(r.empty_class_time))+'</span></button>';}).join('')+'</div>';
     return '<table><thead><tr><th>教室</th><th>座位数</th><th>类型</th><th>来源</th></tr></thead><tbody>'+rows.map(function(r,i){return '<tr><td><button class="ec-link" data-row="'+i+'">'+esc(r.name)+'</button></td><td>'+esc(r.size)+'</td><td>'+esc(r.type)+'</td><td><span class="ec-tag">教务</span></td></tr>'}).join('')+'</tbody></table>';
   }
   function bind(root,rows){
@@ -314,7 +312,7 @@
   function show(){
     try{
       installHooks();
-      if(detectMobileLayout())ensureViewportForMobile();
+      if(detectComfortableTheme())ensureViewportForComfortable();
       createRoot();
       if(!syncFromVue())state.error='没读到官方页面数据，请先进入官方“空闲教室”页面并确认表格已显示。';
       render();

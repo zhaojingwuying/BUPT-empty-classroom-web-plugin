@@ -9,8 +9,8 @@
 - 在当前浏览器页面中增强官方空教室查询结果展示
 - 支持按校区、教学楼、节次筛选空教室
 - 针对西土城校区，将教学楼归类为教一、教二、教三、教四、未来学习大楼
-- 同时兼容电脑端和手机端显示
-- 手机端提供更大的按钮、更适合触屏的筛选区和卡片式教室列表
+- 默认使用更清爽的 **经典主题**，兼容电脑和手机
+- 可点击界面右上角 **切换主题**，切换到更适合触屏操作的 **舒适主题**
 - 不需要安装 Tampermonkey / 篡改猴
 - 不接管登录流程，不保存账号密码
 - 不读取 Cookie，不上传用户数据
@@ -56,7 +56,7 @@ http://jwglweixin.bupt.edu.cn/sjd/#
 javascript:void(function(){alert('当前页面是：'+location.href.split('?')[0].split('#')[0])})()
 ```
 
-如果弹出的地址是 `about:blank`，说明该浏览器不适合本插件，请更换支持 bookmarklet 当前页执行的浏览器。
+如果弹出的地址是 `about:blank`，说明该浏览器没有在当前教务页面执行脚本，请更换支持 bookmarklet 当前页执行的浏览器，例如 Via。
 
 ### 电脑端
 
@@ -64,57 +64,56 @@ javascript:void(function(){alert('当前页面是：'+location.href.split('?')[0
 
 电脑端不需要修改 UA。正常登录官方页面，进入空教室查询页面后点击书签即可。
 
-## 手机版书签
+## 主题说明
 
-手机端推荐使用这个版本。它会强制启用手机布局，按钮更大，结果列表会以卡片形式显示。
+本插件现在有两个显示主题：
+
+| 主题 | 说明 |
+|---|---|
+| 经典主题 | 默认主题。保留原先类似电脑端的表格布局，实测在电脑和手机 Via 中都比较清爽 |
+| 舒适主题 | 触屏优化主题。按钮和结果项更适合手指点击，但相比上一版已经压缩了高度和间距 |
+
+默认打开时使用 **经典主题**。
+
+运行插件后，右上角会显示当前主题，并提供 **切换主题** 按钮。点击后会在经典主题和舒适主题之间切换。
+
+## 推荐书签
 
 新建一个书签，名称可以写：
 
 ```text
-BUPT空教室-手机版
+BUPT空教室查询
 ```
 
 书签网址填写下面这一整行：
 
 ```javascript
-javascript:void((()=>{try{document.getElementById('__bupt_empty_classroom_bookmarklet')?.remove();delete window.__BUPT_EMPTY_CLASSROOM_BOOKMARKLET__;window.__BUPT_EMPTY_CLASSROOM_FORCE_RELOAD__=Date.now();window.__BUPT_EMPTY_CLASSROOM_LAYOUT='mobile';let s=document.createElement('script');s.src='https://cdn.jsdelivr.net/gh/zhaojingwuying/BUPT-empty-classroom-web-plugin@main/src/emptyclassroom.js?v=20260602-v4-mobile-force&layout=mobile';s.onerror=()=>alert('插件加载失败，请检查网络或 jsDelivr 是否能访问');document.documentElement.appendChild(s)}catch(e){alert('插件启动失败：'+e.message)}})())
+javascript:void((()=>{try{document.getElementById('__bupt_empty_classroom_bookmarklet')?.remove();delete window.__BUPT_EMPTY_CLASSROOM_BOOKMARKLET__;window.__BUPT_EMPTY_CLASSROOM_FORCE_RELOAD__=Date.now();window.__BUPT_EMPTY_CLASSROOM_THEME='classic';let s=document.createElement('script');s.src='https://cdn.jsdelivr.net/gh/zhaojingwuying/BUPT-empty-classroom-web-plugin@main/src/emptyclassroom.js?v=20260602-v5-theme-switch&theme=classic';s.onerror=()=>alert('插件加载失败，请检查网络或 jsDelivr 是否能访问');document.documentElement.appendChild(s)}catch(e){alert('插件启动失败：'+e.message)}})())
 ```
 
-## 电脑版书签
+这个书签默认打开 **经典主题**。如果想尝试舒适主题，可以打开插件后点击右上角 **切换主题**。
 
-电脑端推荐使用这个版本。它会强制启用电脑布局，结果以表格形式显示。
+## 舒适主题直达书签
 
-新建一个书签，名称可以写：
+如果你更喜欢触屏优化的舒适主题，也可以另外建一个书签：
 
 ```text
-BUPT空教室-电脑版
+BUPT空教室查询-舒适主题
 ```
 
 书签网址填写下面这一整行：
 
 ```javascript
-javascript:void((()=>{try{document.getElementById('__bupt_empty_classroom_bookmarklet')?.remove();delete window.__BUPT_EMPTY_CLASSROOM_BOOKMARKLET__;window.__BUPT_EMPTY_CLASSROOM_FORCE_RELOAD__=Date.now();window.__BUPT_EMPTY_CLASSROOM_LAYOUT='desktop';let s=document.createElement('script');s.src='https://cdn.jsdelivr.net/gh/zhaojingwuying/BUPT-empty-classroom-web-plugin@main/src/emptyclassroom.js?v=20260602-v4-desktop&layout=desktop';s.onerror=()=>alert('插件加载失败，请检查网络或 jsDelivr 是否能访问');document.documentElement.appendChild(s)}catch(e){alert('插件启动失败：'+e.message)}})())
+javascript:void((()=>{try{document.getElementById('__bupt_empty_classroom_bookmarklet')?.remove();delete window.__BUPT_EMPTY_CLASSROOM_BOOKMARKLET__;window.__BUPT_EMPTY_CLASSROOM_FORCE_RELOAD__=Date.now();window.__BUPT_EMPTY_CLASSROOM_THEME='comfortable';let s=document.createElement('script');s.src='https://cdn.jsdelivr.net/gh/zhaojingwuying/BUPT-empty-classroom-web-plugin@main/src/emptyclassroom.js?v=20260602-v5-theme-switch&theme=comfortable';s.onerror=()=>alert('插件加载失败，请检查网络或 jsDelivr 是否能访问');document.documentElement.appendChild(s)}catch(e){alert('插件启动失败：'+e.message)}})())
 ```
-
-## 自动布局书签
-
-如果你希望插件自动判断手机或电脑，可以使用这个版本：
-
-```javascript
-javascript:void((()=>{try{document.getElementById('__bupt_empty_classroom_bookmarklet')?.remove();delete window.__BUPT_EMPTY_CLASSROOM_BOOKMARKLET__;window.__BUPT_EMPTY_CLASSROOM_FORCE_RELOAD__=Date.now();window.__BUPT_EMPTY_CLASSROOM_LAYOUT='auto';let s=document.createElement('script');s.src='https://cdn.jsdelivr.net/gh/zhaojingwuying/BUPT-empty-classroom-web-plugin@main/src/emptyclassroom.js?v=20260602-v4-auto&layout=auto';s.onerror=()=>alert('插件加载失败，请检查网络或 jsDelivr 是否能访问');document.documentElement.appendChild(s)}catch(e){alert('插件启动失败：'+e.message)}})())
-```
-
-如果自动布局判断不符合预期，可以直接使用“手机版书签”或“电脑版书签”。
-
-插件界面右上角也提供“手机版 / 电脑版”切换按钮，可以在运行后临时切换显示方式。
 
 ## 如何在手机 Via 浏览器中添加书签
 
 1. 先随便打开一个网页。
-2. 添加书签，名称写 `BUPT空教室-手机版`。
+2. 添加书签，名称写 `BUPT空教室查询`。
 3. 保存后进入书签管理。
 4. 编辑刚才的书签。
-5. 把网址改成上面的“手机版书签”整行代码。
+5. 把网址改成上面的“推荐书签”整行代码。
 6. 保存。
 7. 之后进入官方空教室页面并加载出数据后，点击这个书签运行。
 
@@ -129,8 +128,9 @@ javascript:void((()=>{try{document.getElementById('__bupt_empty_classroom_bookma
 3. 自行完成登录。
 4. 进入官方“空教室查询”页面。
 5. 等待官方页面中的空教室数据加载完成。
-6. 点击 `BUPT空教室-手机版` 书签。
-7. 在插件界面中选择校区、教学楼和节次。
+6. 点击 `BUPT空教室查询` 书签。
+7. 默认会进入经典主题。
+8. 如果想使用更适合触屏点击的布局，点击右上角 **切换主题**。
 
 ### 电脑端
 
@@ -138,38 +138,10 @@ javascript:void((()=>{try{document.getElementById('__bupt_empty_classroom_bookma
 2. 自行完成登录。
 3. 进入官方“空教室查询”页面。
 4. 等待官方页面中的空教室数据加载完成。
-5. 点击 `BUPT空教室-电脑版` 书签。
-6. 在插件界面中选择校区、教学楼和节次。
+5. 点击 `BUPT空教室查询` 书签。
+6. 默认会进入经典主题。
 
 ## 常见问题
-
-### 手机页面看起来太小怎么办？
-
-请确认你使用的是“手机版书签”，不是旧版书签或电脑版书签。
-
-手机版书签会做三件事：
-
-1. 强制清除旧版插件界面；
-2. 强制切换到手机布局；
-3. 强制设置页面 viewport。
-
-如果仍然显示很小，通常说明线上代码还没有更新，或者 jsDelivr 还在缓存旧版本。可以访问下面的地址清缓存：
-
-```text
-https://purge.jsdelivr.net/gh/zhaojingwuying/BUPT-empty-classroom-web-plugin@main/src/emptyclassroom.js
-```
-
-清缓存后重新打开官方页面，再点击“手机版书签”。
-
-### 如何判断是不是加载了新版？
-
-运行插件后，界面底部应该能看到类似版本号：
-
-```text
-2026-06-02-public-v4-mobile-force
-```
-
-如果底部还是 `v1`、`v2` 或没有“手机版 / 电脑版”切换按钮，说明你加载的不是新版。
 
 ### 点书签后提示没读到数据怎么办？
 
@@ -191,6 +163,12 @@ javascript:void(function(){alert('当前页面是：'+location.href.split('?')[0
 如果弹出的是 `about:blank`，说明浏览器没有在当前教务页面运行脚本，请换 Via 浏览器。
 
 如果弹出的是官方教务页面地址，但插件仍然异常，可以刷新页面，等官方数据加载完成后再试。
+
+### 手机页面看起来太小怎么办？
+
+默认的经典主题会保留表格布局，在手机 Via 中通常比较清爽。如果觉得按钮不够好点，可以点击右上角 **切换主题** 切到舒适主题。
+
+舒适主题会让按钮和结果卡片更适合触屏，但页面会比经典主题占用更多垂直空间。
 
 ### 为什么手机要把 UA 改成 PC？
 

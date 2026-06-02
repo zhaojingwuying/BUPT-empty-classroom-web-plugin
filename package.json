@@ -1,9 +1,9 @@
 {
   "name": "bupt-empty-classroom-web-plugin",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "private": false,
   "type": "module",
-  "description": "A responsive bookmarklet that enhances an already opened BUPT empty-classroom query page on mobile and desktop.",
+  "description": "A theme-switchable bookmarklet that enhances an already opened BUPT empty-classroom query page.",
   "homepage": "https://github.com/zhaojingwuying/BUPT-empty-classroom-web-plugin#readme",
   "repository": {
     "type": "git",
